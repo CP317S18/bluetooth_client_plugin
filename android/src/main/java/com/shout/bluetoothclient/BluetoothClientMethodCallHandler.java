@@ -32,18 +32,22 @@ public class BluetoothClientMethodCallHandler implements MethodChannel.MethodCal
                 result.success("Android " + android.os.Build.VERSION.RELEASE);
                 break;
             case "initialize":
-                Bridgefy.initialize(c, "7724652a-7e71-4a32-81ca-6be0a9e82d3b", new RegistrationListener() {
-                    @Override
-                    public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
-                        result.success(true);
-                        client = bridgefyClient;
-                    }
+                if(call.hasArgument("apiKey")) {
+                    Bridgefy.initialize(c, (String)call.argument("apiKey"), new RegistrationListener() {
+                        @Override
+                        public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
+                            result.success(true);
+                            client = bridgefyClient;
+                        }
 
-                    @Override
-                    public void onRegistrationFailed(int errorCode, String message) {
-                        result.error(String.valueOf(errorCode),message,null);
-                    }
-                });
+                        @Override
+                        public void onRegistrationFailed(int errorCode, String message) {
+                            result.error(String.valueOf(errorCode), message, null);
+                        }
+                    });
+                }else{
+                    result.error("100","Missing API Key",null);
+                }
                 break;
             case "sendBroadcastMessage":
                 if(call.hasArgument("content") && call.hasArgument("username")){

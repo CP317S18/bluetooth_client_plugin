@@ -10,13 +10,10 @@ class BluetoothClient {
   static const EventChannel _messageSentChannel =
   const EventChannel('bluetooth_client_message_sent');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
-  static Future<bool> initialize() async{
-    final bool res = await _channel.invokeMethod("initialize");
+  static Future<bool> initialize(String apiKey) async{
+    final bool res = await _channel.invokeMethod("initialize",{
+      'apiKey':apiKey
+    });
     return res;
   }
 
